@@ -116,9 +116,9 @@ int32_t ad9656_setup(struct ad9656_dev **device,
 int32_t ad9656_remove(struct ad9656_dev *dev);
 
 int32_t ad9656_JESD204_test(struct ad9656_dev *dev,
-		    uint32_t test_mode);
+			    uint32_t test_mode);
 
 int32_t ad9656_user_input_test(struct ad9656_dev *dev, uint32_t test_mode,
-			struct ad9656_user_input_test_pattern user_input_test_pattern);
+			       struct ad9656_user_input_test_pattern user_input_test_pattern);
 
 #endif

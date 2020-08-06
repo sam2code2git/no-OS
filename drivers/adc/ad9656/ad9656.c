@@ -116,7 +116,7 @@ int32_t ad9656_spi_write(struct ad9656_dev *dev,
  * 		   FAILURE otherwise
  */
 int32_t ad9656_JESD204_test(struct ad9656_dev *dev,
-		    uint32_t test_mode)
+			    uint32_t test_mode)
 {
 	uint8_t format;
 	ad9656_spi_write(dev, AD9656_REG_ADC_TEST_MODE, test_mode);
@@ -124,13 +124,14 @@ int32_t ad9656_JESD204_test(struct ad9656_dev *dev,
 		format = AD9656_FORMAT_OFFSET_BINARY;
 	else
 		format = AD9656_FORMAT_2S_COMPLEMENT;
+
 	return ad9656_spi_write(dev, AD9656_REG_OUTPUT_MODE, format);
 }
 
 /**
  * @brief Launch the user input test functionality for the receive path for the ad9656 chip.
  * 	      User input data is supplied on the outputs instead of real data captured on the ADC.
- * @param dev - The device hanlder for the ad9656 chip
+ * @param dev - The device handler for the ad9656 chip
  * @param test_mode - The type of test that is to be performed or OFF if the testing
  * 					  process is to be stopped
  * @param user_input_test_pattern - User input test pattern that is sent on the output instead of
@@ -139,15 +140,19 @@ int32_t ad9656_JESD204_test(struct ad9656_dev *dev,
  * 		   otherwise
  */
 int32_t ad9656_user_input_test(struct ad9656_dev *dev, uint32_t test_mode,
-			struct ad9656_user_input_test_pattern user_input_test_pattern)
+			       struct ad9656_user_input_test_pattern user_input_test_pattern)
 {
 	uint8_t format;
 
 	/* write user input test pattern in the registers */
-	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_1_LSB, user_input_test_pattern.user_test_pattern1 & 0xFF);
-	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_1_MSB, user_input_test_pattern.user_test_pattern1 >> 8);
-	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_2_LSB, user_input_test_pattern.user_test_pattern2 & 0xFF);
-	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_2_MSB, user_input_test_pattern.user_test_pattern2 >> 8);
+	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_1_LSB,
+			 user_input_test_pattern.user_test_pattern1 & 0xFF);
+	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_1_MSB,
+			 user_input_test_pattern.user_test_pattern1 >> 8);
+	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_2_LSB,
+			 user_input_test_pattern.user_test_pattern2 & 0xFF);
+	ad9656_spi_write(dev, AD9656_REG_USER_TEST_PATTERN_2_MSB,
+			 user_input_test_pattern.user_test_pattern2 >> 8);
 
 	/* determine the chip to output the user test pattern */
 	return ad9656_spi_write(dev, AD9656_REG_ADC_TEST_MODE, test_mode);
@@ -179,27 +184,42 @@ int32_t ad9656_setup(struct ad9656_dev **device,
 	ad9656_spi_write(dev, AD9656_SPI_CONFIG, 0x3C);	/* RESET */
 	mdelay(250);
 
-	ad9656_spi_read(dev, AD9656_REG_CHIP_ID, &chip_id);
+	ret = ad9656_spi_read(dev, AD9656_REG_CHIP_ID, &chip_id);
+
+	if (ret != SUCCESS)
+		return ret;
+
 	if (chip_id != AD9656_CHIP_ID) {
 		printf("AD9656: Invalid CHIP ID (0x%x).\n", chip_id);
 		return FAILURE;
 	}
 
-	ad9656_spi_write(dev, AD9656_REG_LINK_CONTROL, 0x15);	/* disable link, ilas enable */
-	ad9656_spi_write(dev, AD9656_REG_JESD204B_MF_CTRL, 0x1f);	/* 32 frames per multiframe */
+	ad9656_spi_write(dev, AD9656_REG_LINK_CONTROL,
+			 0x15);	/* disable link, ilas enable */
+	ad9656_spi_write(dev, AD9656_REG_JESD204B_MF_CTRL,
+			 0x1f);	/* 32 frames per multiframe */
 	ad9656_spi_write(dev, AD9656_REG_JESD204B_M_CTRL, 0x03);	/* 4 converters */
-	ad9656_spi_write(dev, AD9656_REG_JESD204B_CSN_CONFIG, 0x0d);	/* converter resolution of 14-bit */
-	ad9656_spi_write(dev, AD9656_REG_JESD204B_SUBCLASS_CONFIG, 0x2f);	/* subclass-1, N'=16 */
+	ad9656_spi_write(dev, AD9656_REG_JESD204B_CSN_CONFIG,
+			 0x0d);	/* converter resolution of 14-bit */
+	ad9656_spi_write(dev, AD9656_REG_JESD204B_SUBCLASS_CONFIG,
+			 0x2f);	/* subclass-1, N'=16 */
 	ad9656_spi_write(dev, AD9656_REG_JESD204B_QUICK_CONFIG, 0x44);	/* m=4, l=4 */
-	ad9656_spi_write(dev, AD9656_REG_JESD204B_SCR_L, 0x83);	/* enable scrambling, l=4 */
+	ad9656_spi_write(dev, AD9656_REG_JESD204B_SCR_L,
+			 0x83);	/* enable scrambling, l=4 */
 	if (init_param->lane_rate_kbps < 2000000)
-		ad9656_spi_write(dev, AD9656_REG_JESD204B_LANE_RATE_CTRL, 0x08);	/* low line rate mode must be enabled */
+		ad9656_spi_write(dev, AD9656_REG_JESD204B_LANE_RATE_CTRL,
+				 0x08);	/* low line rate mode must be enabled */
 	else
-		ad9656_spi_write(dev, AD9656_REG_JESD204B_LANE_RATE_CTRL, 0x00);	/* low line rate mode must be disabled */
+		ad9656_spi_write(dev, AD9656_REG_JESD204B_LANE_RATE_CTRL,
+				 0x00);	/* low line rate mode must be disabled */
 	ad9656_spi_write(dev, AD9656_REG_LINK_CONTROL, 0x14);	/* link enable */
 	mdelay(250);
 
-	ad9656_spi_read(dev, AD9656_REG_JESD204B_PLL_LOCK_STATUS, &pll_stat);
+	ret = ad9656_spi_read(dev, AD9656_REG_JESD204B_PLL_LOCK_STATUS, &pll_stat);
+
+	if (ret != SUCCESS)
+		return ret;
+
 	if ((pll_stat & 0x80) != 0x80) {
 		printf("AD9656: PLL is NOT locked!\n");
 		ret = FAILURE;
