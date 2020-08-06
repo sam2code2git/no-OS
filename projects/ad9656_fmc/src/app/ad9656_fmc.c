@@ -70,31 +70,31 @@ int main(void)
 
 	/* Initialize SPI structures */
 	struct spi_init_param ad9508_spi_param = {
-			.max_speed_hz = 2000000u,
-			.chip_select = 1,
-			.mode = SPI_MODE_0
+		.max_speed_hz = 2000000u,
+		.chip_select = 1,
+		.mode = SPI_MODE_0
 	};
 
 	struct spi_init_param ad9553_spi_param = {
-			.max_speed_hz = 2000000u,
-			.chip_select = 2,
-			.mode = SPI_MODE_0
+		.max_speed_hz = 2000000u,
+		.chip_select = 2,
+		.mode = SPI_MODE_0
 	};
 	struct spi_init_param ad9656_spi_param = {
-			.max_speed_hz = 2000000u,
-			.chip_select = 0,
-			.mode = SPI_MODE_0
+		.max_speed_hz = 2000000u,
+		.chip_select = 0,
+		.mode = SPI_MODE_0
 	};
 
 	struct xil_spi_init_param xil_spi_param = {
-			.type = SPI_PS,
-			.device_id = SPI_DEVICE_ID
+		.type = SPI_PS,
+		.device_id = SPI_DEVICE_ID
 	};
 
 	/* this pattern is outputed by the ad9656 chip after the JESD204 test is finished */
 	struct ad9656_user_input_test_pattern user_input_test_pattern = {
-			.user_test_pattern1 = 0xA1B2,
-			.user_test_pattern2 = 0xC3D4
+		.user_test_pattern1 = 0xA1B2,
+		.user_test_pattern2 = 0xC3D4
 	};
 
 	ad9508_spi_param.platform_ops = &xil_platform_ops;
@@ -121,15 +121,15 @@ int main(void)
 //******************************************************************************
 
 	struct adxcvr_init ad9656_xcvr_param = {
-			.name = "ad9656_xcvr",
-			.base = XPAR_AXI_AD9656_RX_XCVR_BASEADDR,
-			.sys_clk_sel = 0,
-			.out_clk_sel = 4,
-			.lpm_enable = 1,
-			.cpll_enable = 1,
-			.ref_rate_khz = 125000,
-			.lane_rate_khz = 2500000
-		};
+		.name = "ad9656_xcvr",
+		.base = XPAR_AXI_AD9656_RX_XCVR_BASEADDR,
+		.sys_clk_sel = 0,
+		.out_clk_sel = 4,
+		.lpm_enable = 1,
+		.cpll_enable = 1,
+		.ref_rate_khz = 125000,
+		.lane_rate_khz = 2500000
+	};
 
 //******************************************************************************
 // ADC (AD9656) and the receive path ( AXI_ADXCVR,
@@ -138,22 +138,22 @@ int main(void)
 
 	/* JESD initialization */
 	struct jesd204_rx_init  ad9656_jesd_param = {
-			.name = "ad9656_jesd",
-			.base = RX_JESD_BASEADDR,
-			.octets_per_frame = 2,
-			.frames_per_multiframe = 32,
-			.subclass = 1,
-			.device_clk_khz = 2500000/40,
-			.lane_clk_khz = 2500000
+		.name = "ad9656_jesd",
+		.base = RX_JESD_BASEADDR,
+		.octets_per_frame = 2,
+		.frames_per_multiframe = 32,
+		.subclass = 1,
+		.device_clk_khz = 2500000/40,
+		.lane_clk_khz = 2500000
 	};
 
 	struct axi_jesd204_rx *ad9656_jesd;
 
 	/* ADC Core */
 	struct axi_adc_init ad9656_core_param = {
-			.name = "ad9656_adc",
-			.base = RX_CORE_BASEADDR,
-			.num_channels = 4
+		.name = "ad9656_adc",
+		.base = RX_CORE_BASEADDR,
+		.num_channels = 4
 	};
 	struct axi_adc	*ad9656_core;
 	struct adxcvr	*ad9656_xcvr;
@@ -163,13 +163,13 @@ int main(void)
 //******************************************************************************
 
 	struct axi_dmac_init ad9656_dmac_param = {
-			.name = "ad9656_dmac",
-			.base = RX_DMA_BASEADDR,
-			.direction = DMA_DEV_TO_MEM,
-			.flags = 0
+		.name = "ad9656_dmac",
+		.base = RX_DMA_BASEADDR,
+		.direction = DMA_DEV_TO_MEM,
+		.flags = 0
 	};
 	struct axi_dmac *ad9656_dmac;
-	
+
 //******************************************************************************
 // bring up the system
 //******************************************************************************
@@ -191,11 +191,11 @@ int main(void)
 	ad9656_setup(&ad9656_device, &ad9656_param);
 
 	if (adxcvr_init(&ad9656_xcvr, &ad9656_xcvr_param) != SUCCESS) {
-			printf("error: %s: adxcvr_init() failed\n", ad9656_xcvr->name);
+		printf("error: %s: adxcvr_init() failed\n", ad9656_xcvr->name);
 	}
 
 	if (adxcvr_clk_enable(ad9656_xcvr) != SUCCESS) {
-			printf("error: %s: adxcvr_clk_enable() failed\n", ad9656_xcvr->name);
+		printf("error: %s: adxcvr_clk_enable() failed\n", ad9656_xcvr->name);
 	}
 
 	if (axi_jesd204_rx_init(&ad9656_jesd, &ad9656_jesd_param) != SUCCESS) {
@@ -203,7 +203,8 @@ int main(void)
 	}
 
 	if (axi_jesd204_rx_lane_clk_enable(ad9656_jesd) != SUCCESS) {
-		printf("error: %s: axi_jesd204_tx_lane_clk_enable() failed\n", ad9656_jesd->name);
+		printf("error: %s: axi_jesd204_tx_lane_clk_enable() failed\n",
+		       ad9656_jesd->name);
 	}
 
 	status = axi_jesd204_rx_status_read(ad9656_jesd);
@@ -223,15 +224,13 @@ int main(void)
 	ad9656_JESD204_test(ad9656_device, AD9656_TEST_PN9);
 	if(axi_adc_pn_mon(ad9656_core, AXI_ADC_PN9, 10) == -1) {
 		printf("%s ad9656 - PN9 sequence mismatch!\n", __func__);
-	}
-	else {
+	} else {
 		printf("%s ad9656 - PN9 sequence checked!\n", __func__);
 	}
 	ad9656_JESD204_test(ad9656_device, AD9656_TEST_PN23);
 	if(axi_adc_pn_mon(ad9656_core, AXI_ADC_PN23A, 10) == -1) {
 		printf("%s ad9656 - PN23 sequence mismatch!\n", __func__);
-	}
-	else {
+	} else {
 		printf("%s ad9656 - PN23 sequence checked!\n", __func__);
 	}
 
@@ -242,10 +241,10 @@ int main(void)
 //******************************************************************************
 
 	/* start sending user input test pattern */
-	if (ad9656_user_input_test(ad9656_device, AD9656_TEST_USER_INPUT, user_input_test_pattern) == -1) {
+	if (ad9656_user_input_test(ad9656_device, AD9656_TEST_USER_INPUT,
+				   user_input_test_pattern) == -1) {
 		printf("Could not start the user input test sequence!\n");
-	}
-	else {
+	} else {
 		printf("User input test sequence started!\n");
 	}
 

@@ -110,7 +110,7 @@ int32_t ad9553_spi_write(struct ad9553_dev *dev,
  * @return SUCCESS if device is ready for use, FAILURE otherwise
  */
 int ad9553_setup(struct ad9553_dev **device,
-	     const struct ad9553_init_param *init_param)
+		 const struct ad9553_init_param *init_param)
 {
 	int32_t ret;
 

@@ -110,7 +110,7 @@ int32_t ad9508_spi_write(struct ad9508_dev *dev,
  * @return SUCCESS if device is ready for use, FAILURE otherwise
  */
 int ad9508_setup(struct ad9508_dev **device,
-	     const struct ad9508_init_param *init_param)
+		 const struct ad9508_init_param *init_param)
 {
 	int32_t ret;
 
@@ -141,10 +141,14 @@ int ad9508_setup(struct ad9508_dev **device,
 
 	// configure 9508 to pass the 125MHz input clock unmodified, so divider = 1
 	// no phase offset
-	ad9508_spi_write(dev, AD9508_OUT1_DIV_RATIO_LOW, AD9508_DIVIDE_RATIO_ONE); // divide ratio[7:0]
-	ad9508_spi_write(dev, AD9508_OUT1_DIV_RATIO_HIGH, AD9508_DIVIDE_RATIO_ONE); // divide ratio[9:8]
-	ad9508_spi_write(dev, AD9508_OUT1_PHASE_LOW, AD9508_DIVIDE_RATIO_ONE); // phase offset[7:0]
-	ad9508_spi_write(dev, AD9508_OUT1_PHASE_HIGH, AD9508_DIVIDE_RATIO_ONE); // phase offset[10:8]
+	ad9508_spi_write(dev, AD9508_OUT1_DIV_RATIO_LOW,
+			 AD9508_DIVIDE_RATIO_ONE); // divide ratio[7:0]
+	ad9508_spi_write(dev, AD9508_OUT1_DIV_RATIO_HIGH,
+			 AD9508_DIVIDE_RATIO_ONE); // divide ratio[9:8]
+	ad9508_spi_write(dev, AD9508_OUT1_PHASE_LOW,
+			 AD9508_DIVIDE_RATIO_ONE); // phase offset[7:0]
+	ad9508_spi_write(dev, AD9508_OUT1_PHASE_HIGH,
+			 AD9508_DIVIDE_RATIO_ONE); // phase offset[10:8]
 
 	return SUCCESS;
 }

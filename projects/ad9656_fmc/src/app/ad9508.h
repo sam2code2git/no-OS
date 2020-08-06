@@ -48,9 +48,9 @@
 /********************** Macros and Constants Definitions **********************/
 /******************************************************************************/
 
-#define AD9508_SPI_CONFIG				        0x000
-#define AD9508_PART_ID_LOW				        0x00C
-#define AD9508_PART_ID_HIGH				        0x00D
+#define AD9508_SPI_CONFIG				    0x000
+#define AD9508_PART_ID_LOW				    0x00C
+#define AD9508_PART_ID_HIGH				    0x00D
 #define AD9508_OUT1_DIV_RATIO_LOW			    0x01B
 #define AD9508_OUT1_DIV_RATIO_HIGH			    0x01C
 #define AD9508_OUT1_PHASE_LOW			   	    0x01D
@@ -76,11 +76,14 @@ struct ad9508_dev {
 /************************ Functions Declarations ******************************/
 /******************************************************************************/
 
-int32_t ad9508_spi_read(struct ad9508_dev *dev, uint16_t reg_addr, uint8_t *reg_data);
+int32_t ad9508_spi_read(struct ad9508_dev *dev, uint16_t reg_addr,
+			uint8_t *reg_data);
 
-int32_t ad9508_spi_write(struct ad9508_dev *dev, uint16_t reg_addr, uint8_t reg_data);
+int32_t ad9508_spi_write(struct ad9508_dev *dev, uint16_t reg_addr,
+			 uint8_t reg_data);
 
-int ad9508_setup(struct ad9508_dev **device, const struct ad9508_init_param *init_param);
+int ad9508_setup(struct ad9508_dev **device,
+		 const struct ad9508_init_param *init_param);
 
 int32_t ad9508_remove(struct ad9508_dev *dev);
 
